@@ -14,8 +14,19 @@ body * {
     width: 100vw;
 }
 
+.hint {
+    font-size: .6em;
+    color: darkgray;
+}
+.form {
+    max-width: 400px;
+}
 .form__row {
     margin-bottom: 10px;
+}
+
+.form__hint {
+    padding: 0 10px;
 }
 
 .input {
