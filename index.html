@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact form</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<div class="box">
+    <form class="form" id="myForm" action="success.json">
+        <div class="form__row">
+            <input class="input" name="fio" placeholder="Full name">
+        </div>
+        <div class="form__row">
+            <input class="input" name="email" type="email" placeholder="Email">
+        </div>
+        <div class="form__row">
+            <input class="input" name="phone" type="tel" placeholder="Phone">
+        </div>
+        <div class="form__actions">
+            <button class="button" id="submitButton">Submit</button>
+        </div>
+    </form>
+    <div id="resultContainer"></div>
+</div>
+<script src="index.js"></script>
+</body>
+</html>
