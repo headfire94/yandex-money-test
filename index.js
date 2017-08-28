@@ -1,24 +1,40 @@
 class MyError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+        if (typeof Error.captureStackTrace === 'function') {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error(message)).stack;
+        }
+    }
 }
 
 // ENUMS
 const NOT_TEXT_ERROR = 'text is not string';
 
 // Simple email regexp
-const EMAIL_REGEX = /^[a-zA-Z0-9_\.\+-]+@(ya\.ru|(yandex\.(ru|ua|by|kz|com)))/;
-const TEL_REGEX = /^\+7\([0-9]{3}\)[0-9]{3}-([0-9]{2})-([0-9]{2})$/;
+export const EMAIL_REGEX = /^[a-zA-Z0-9_\.\+-]+@(ya\.ru|(yandex\.(ru|ua|by|kz|com)))/;
+export const TEL_REGEX = /^\+7\([0-9]{3}\)[0-9]{3}-([0-9]{2})-([0-9]{2})$/;
 /**
  * count words in text
  * exclude first and last white-space and multiply white-space between words
- * @param text
+ * @param {string} text
  * @returns {Number}
  */
-const countWords = text => {
+export const countWords = text => {
     if (typeof text !== 'string') throw new MyError(NOT_TEXT_ERROR);
-    return text.trim().split(/\s+/).length;
-}
+    const trimmedText = text.trim();
+    if (!trimmedText) return 0;
+    return trimmedText.split(/\s+/).length;
+};
 
-const counteSumOfStringNumbers = str => {
+/**
+ * Count sum of numbers in text string
+ * @param {string} str
+ * @returns {number}
+ */
+export const countSumOfStringNumbers = str => {
     if (typeof str !== 'string') throw new MyError(NOT_TEXT_ERROR);
     return str.split('').reduce((prev, next) => {
         const number = parseInt(next);
@@ -44,7 +60,7 @@ const validationRules = {
     phone: {
         required: true,
         test: value => {
-            return counteSumOfStringNumbers(value) < 30 && TEL_REGEX.test(value)
+            return countSumOfStringNumbers(value) < 30 && TEL_REGEX.test(value)
         }
     }
 };
@@ -62,7 +78,7 @@ class Form {
         }
         this.fields = this.form.elements;
         if (!this.fields) {
-            throw new MyError('there are no filds in DOM')
+            throw new MyError('there are no fields in DOM')
         }
 
         this.form.addEventListener("submit", this.submit.bind(this));
