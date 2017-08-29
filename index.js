@@ -14,15 +14,15 @@ class MyError extends Error {
 const NOT_TEXT_ERROR = 'text is not string';
 
 // Simple email regexp
-export const EMAIL_REGEX = /^[a-zA-Z0-9_\.\+-]+@(ya\.ru|(yandex\.(ru|ua|by|kz|com)))/;
-export const TEL_REGEX = /^\+7\([0-9]{3}\)[0-9]{3}-([0-9]{2})-([0-9]{2})$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9_\.\+-]+@(ya\.ru|(yandex\.(ru|ua|by|kz|com)))/;
+const TEL_REGEX = /^\+7\([0-9]{3}\)[0-9]{3}-([0-9]{2})-([0-9]{2})$/;
 /**
  * count words in text
  * exclude first and last white-space and multiply white-space between words
  * @param {string} text
  * @returns {Number}
  */
-export const countWords = text => {
+const countWords = text => {
     if (typeof text !== 'string') throw new MyError(NOT_TEXT_ERROR);
     const trimmedText = text.trim();
     if (!trimmedText) return 0;
@@ -34,7 +34,7 @@ export const countWords = text => {
  * @param {string} str
  * @returns {number}
  */
-export const countSumOfStringNumbers = str => {
+const countSumOfStringNumbers = str => {
     if (typeof str !== 'string') throw new MyError(NOT_TEXT_ERROR);
     return str.split('').reduce((prev, next) => {
         const number = parseInt(next);
@@ -66,7 +66,7 @@ const validationRules = {
 };
 
 class Form {
-    constructor({containerId, formId, validationRules}) {
+    constructor({containerId, formId, validationRules, fields}) {
         this.validationRules = validationRules;
         this.form = document.getElementById(formId);
         this.container = document.getElementById(containerId);
@@ -76,7 +76,10 @@ class Form {
         if (!this.form) {
             throw new MyError('there is no form in DOM')
         }
-        this.fields = this.form.elements;
+
+        this.fields = {};
+        fields.forEach(field => this.fields[field] = this.form.elements[field]);
+
         if (!this.fields) {
             throw new MyError('there are no fields in DOM')
         }
@@ -84,17 +87,14 @@ class Form {
         this.form.addEventListener("submit", this.submit.bind(this));
     }
 
-    validate() {
+    validate(data) {
         let isValid = true;
         const errorFields = [];
         if (!this.validationRules) return {isValid, errorFields};
 
-        for (let i = 0; i < this.fields.length; i++) {
-            const field = this.fields[i];
-            const fieldName = field.name;
-            const value = field.value;
+        for (let fieldName in this.validationRules) {
             const rule = this.validationRules[fieldName];
-            if (rule && ((rule.required && !value) || !rule.test(value))) {
+            if ((rule.required && !data[fieldName]) || !rule.test(data[fieldName])) {
                 errorFields.push(fieldName);
                 isValid = false;
             }
@@ -105,9 +105,18 @@ class Form {
         }
     }
 
+    getData() {
+        const data = {};
+        for (let fieldName in this.fields) {
+            data[fieldName] = this.fields[fieldName].value;
+        }
+        return data;
+    }
+
     submit(e) {
         e.preventDefault();
-        const valid = this.validate();
+        const data = this.getData();
+        const valid = this.validate(data);
         console.log(valid);
     }
 }
@@ -116,8 +125,16 @@ document.addEventListener("DOMContentLoaded", () => {
     window.MyForm = new Form({
         containerId: 'resultContainer',
         formId: 'myForm',
-        validationRules
+        validationRules,
+        fields: ["fio", "email", "phone"]
     });
 });
 
-
+if (typeof module !== 'undefined') {
+    module.exports = {
+        EMAIL_REGEX,
+        TEL_REGEX,
+        countSumOfStringNumbers,
+        countWords
+    };
+}

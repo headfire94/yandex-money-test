@@ -1,4 +1,4 @@
-import {countWords, MyError, EMAIL_REGEX, TEL_REGEX, countSumOfStringNumbers} from './index';
+import {countWords, EMAIL_REGEX, TEL_REGEX, countSumOfStringNumbers} from './index';
 
 describe('count words', () => {
     it('should count words in text', () => {
@@ -10,7 +10,7 @@ describe('count words', () => {
         const text = null;
         expect(() => {
             countWords(text)
-        }).toThrow(MyError);
+        }).toThrow();
     });
 
     it('should count zero words in empty text', () => {
@@ -34,7 +34,7 @@ describe('countSumOfStringNumbers', () => {
         const text = null;
         expect(() => {
             countSumOfStringNumbers(text)
-        }).toThrow(MyError);
+        }).toThrow();
     });
 
     it('should count sum of numbers in empty string', () => {
