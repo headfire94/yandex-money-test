@@ -67,6 +67,7 @@ const validationRules = {
 
 class Form {
     constructor({containerId, formId, validationRules, fields}) {
+        this.fields = fields;
         this.validationRules = validationRules;
         this.form = document.getElementById(formId);
         this.container = document.getElementById(containerId);
@@ -76,12 +77,8 @@ class Form {
         if (!this.form) {
             throw new MyError('there is no form in DOM')
         }
-
-        this.fields = {};
-        fields.forEach(field => this.fields[field] = this.form.elements[field]);
-
         if (!this.fields) {
-            throw new MyError('there are no fields in DOM')
+            throw new MyError('fields not presented')
         }
 
         this.form.addEventListener("submit", this.submit.bind(this));
@@ -107,9 +104,7 @@ class Form {
 
     getData() {
         const data = {};
-        for (let fieldName in this.fields) {
-            data[fieldName] = this.fields[fieldName].value;
-        }
+        this.fields.forEach(field => data[field] = this.form.elements[field].value);
         return data;
     }
 
