@@ -64,7 +64,7 @@ class Form {
 
     Object.keys(this.validationRules).forEach((fieldName) => {
       const rule = this.validationRules[fieldName];
-      if ((rule.required && !data[fieldName]) || !rule.test(data[fieldName])) {
+      if ((rule.required && !data[fieldName]) || !rule.validate(data[fieldName])) {
         errorFields.push(fieldName);
         isValid = false;
       }

@@ -7,17 +7,16 @@ const WORDS_COUNT = 3;
 const validationRules = {
   fio: {
     required: true,
-    test: value =>
-      countWords(value) === WORDS_COUNT && !/\d+/.test(value), //  имя из 3х слов и не содержат цифр
+    validate: value => countWords(value) === WORDS_COUNT && !/\d+/.test(value), //  имя из 3х слов и не содержат цифр
 
   },
   email: {
     required: true,
-    test: value => EMAIL_REGEX.test(value),
+    validate: value => EMAIL_REGEX.test(value),
   },
   phone: {
     required: true,
-    test: value => countSumOfStringNumbers(value) < 30 && TEL_REGEX.test(value),
+    validate: value => countSumOfStringNumbers(value) < 30 && TEL_REGEX.test(value),
   },
 };
 
