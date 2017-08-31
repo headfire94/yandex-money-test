@@ -1,4 +1,4 @@
-import {countWords, EMAIL_REGEX, TEL_REGEX, countSumOfStringNumbers} from './index';
+import {countWords, EMAIL_REGEX, TEL_REGEX, countSumOfStringNumbers} from '../index';
 
 describe('count words', () => {
     it('should count words in text', () => {

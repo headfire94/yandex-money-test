@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    font-size: 20px;
 }
 
 body * {
@@ -12,15 +13,18 @@ body * {
     align-items: center;
     height: 100vh;
     width: 100vw;
+    flex-direction: column;
 }
 
 .hint {
     font-size: .6em;
     color: darkgray;
 }
+
 .form {
     max-width: 400px;
 }
+
 .form__row {
     margin-bottom: 10px;
 }
@@ -41,9 +45,30 @@ body * {
     border-bottom: 2px solid #ffdb4d;
 }
 
+.input._error, .input._error:focus {
+    border-bottom: 2px solid red;
+}
+
 .button {
     padding: 10px;
     background: #ffdb4d;
     border: 0;
     width: 100%;
+    cursor: pointer;
+}
+
+.result {
+    padding-top: 15px;
+}
+
+.result.success {
+    border-bottom: 1px dashed green;
+}
+
+.result.error {
+    border-bottom: 1px dashed red;
+}
+
+.result.progress {
+    border-bottom: 1px dashed gray;
 }
