@@ -1,7 +1,8 @@
-import MyError from './utils/errors';
+import MyError, { NO_CONTAINER, NO_FORM, NO_FIELDS, NO_URL, NO_SUBMIT_BTN } from './utils/errors';
 import { resStatuses } from './enums';
 
 const REPEAT_TIMER = 3000;
+
 class Form {
   /**
    *
@@ -15,22 +16,32 @@ class Form {
     this.validationRules = validationSettings;
     this.form = document.getElementById(formId);
     this.container = document.getElementById(containerId);
-    if (!this.container) {
-      throw new MyError('there is no container in DOM');
-    }
-    if (!this.form) {
-      throw new MyError('there is no form in DOM');
-    }
-    if (!this.fields) {
-      throw new MyError('fields not presented');
-    }
     this.submitBtn = this.form.elements.submitButton;
     this.url = this.form.action;
 
+    this.handleSetupErrors();
     this.submit = this.submit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmit();
     this.handleFieldChange();
+  }
+
+  handleSetupErrors() {
+    if (!this.container) {
+      throw new MyError(NO_CONTAINER);
+    }
+    if (!this.form) {
+      throw new MyError(NO_FORM);
+    }
+    if (!this.fields) {
+      throw new MyError(NO_FIELDS);
+    }
+    if (!this.submitBtn) {
+      throw new MyError(NO_SUBMIT_BTN);
+    }
+    if (!this.url) {
+      throw new MyError(NO_URL);
+    }
   }
 
   handleFieldChange() {
@@ -118,7 +129,8 @@ class Form {
         this.container.textContent = 'in progress';
         setTimeout(this.submit, REPEAT_TIMER);
         break;
-      default: break;
+      default:
+        break;
     }
   }
 

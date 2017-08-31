@@ -2,11 +2,13 @@ import Form from './Form';
 import { countWords, countSumOfStringNumbers } from './utils/index';
 import { EMAIL_REGEX, TEL_REGEX } from './utils/regexp';
 
+const WORDS_COUNT = 3;
+
 const validationRules = {
   fio: {
     required: true,
     test: value =>
-      countWords(value) === 3 && !/\d+/.test(value), //  имя из 3х слов и не содержат цифр
+      countWords(value) === WORDS_COUNT && !/\d+/.test(value), //  имя из 3х слов и не содержат цифр
 
   },
   email: {
