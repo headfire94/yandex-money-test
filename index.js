@@ -78,8 +78,23 @@ class MyError extends Error {
 const NOT_TEXT_ERROR = 'text is not string';
 /* harmony export (immutable) */ __webpack_exports__["a"] = NOT_TEXT_ERROR;
 
+const NO_CONTAINER = 'there is no container in DOM';
+/* harmony export (immutable) */ __webpack_exports__["b"] = NO_CONTAINER;
 
-/* harmony default export */ __webpack_exports__["b"] = (MyError);
+const NO_FORM = 'there is no form in DOM';
+/* harmony export (immutable) */ __webpack_exports__["d"] = NO_FORM;
+
+const NO_FIELDS = 'fields not presented';
+/* harmony export (immutable) */ __webpack_exports__["c"] = NO_FIELDS;
+
+const NO_URL = 'url not presented';
+/* harmony export (immutable) */ __webpack_exports__["f"] = NO_URL;
+
+const NO_SUBMIT_BTN = 'there is no submitBtn in DOM';
+/* harmony export (immutable) */ __webpack_exports__["e"] = NO_SUBMIT_BTN;
+
+
+/* harmony default export */ __webpack_exports__["g"] = (MyError);
 
 
 /***/ }),
@@ -95,20 +110,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+const WORDS_COUNT = 3;
+
 const validationRules = {
   fio: {
     required: true,
-    test: value =>
-      Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["b" /* countWords */])(value) === 3 && !/\d+/.test(value), //  имя из 3х слов и не содержат цифр
+    validate: value => Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["b" /* countWords */])(value) === WORDS_COUNT && !/\d+/.test(value), //  имя из 3х слов и не содержат цифр
 
   },
   email: {
     required: true,
-    test: value => __WEBPACK_IMPORTED_MODULE_2__utils_regexp__["a" /* EMAIL_REGEX */].test(value),
+    validate: value => __WEBPACK_IMPORTED_MODULE_2__utils_regexp__["a" /* EMAIL_REGEX */].test(value),
   },
   phone: {
     required: true,
-    test: value => Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* countSumOfStringNumbers */])(value) < 30 && __WEBPACK_IMPORTED_MODULE_2__utils_regexp__["b" /* TEL_REGEX */].test(value),
+    validate: value => Object(__WEBPACK_IMPORTED_MODULE_1__utils_index__["a" /* countSumOfStringNumbers */])(value) < 30 && __WEBPACK_IMPORTED_MODULE_2__utils_regexp__["b" /* TEL_REGEX */].test(value),
   },
 };
 
@@ -134,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 const REPEAT_TIMER = 3000;
+
 class Form {
   /**
    *
@@ -147,21 +164,32 @@ class Form {
     this.validationRules = validationSettings;
     this.form = document.getElementById(formId);
     this.container = document.getElementById(containerId);
-    if (!this.container) {
-      throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["b" /* default */]('there is no container in DOM');
-    }
-    if (!this.form) {
-      throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["b" /* default */]('there is no form in DOM');
-    }
-    if (!this.fields) {
-      throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["b" /* default */]('fields not presented');
-    }
     this.submitBtn = this.form.elements.submitButton;
     this.url = this.form.action;
 
+    this.handleSetupErrors();
+    this.submit = this.submit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmit();
     this.handleFieldChange();
-    this.submit = this.submit.bind(this);
+  }
+
+  handleSetupErrors() {
+    if (!this.container) {
+      throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["g" /* default */](__WEBPACK_IMPORTED_MODULE_0__utils_errors__["b" /* NO_CONTAINER */]);
+    }
+    if (!this.form) {
+      throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["g" /* default */](__WEBPACK_IMPORTED_MODULE_0__utils_errors__["d" /* NO_FORM */]);
+    }
+    if (!this.fields) {
+      throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["g" /* default */](__WEBPACK_IMPORTED_MODULE_0__utils_errors__["c" /* NO_FIELDS */]);
+    }
+    if (!this.submitBtn) {
+      throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["g" /* default */](__WEBPACK_IMPORTED_MODULE_0__utils_errors__["e" /* NO_SUBMIT_BTN */]);
+    }
+    if (!this.url) {
+      throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["g" /* default */](__WEBPACK_IMPORTED_MODULE_0__utils_errors__["f" /* NO_URL */]);
+    }
   }
 
   handleFieldChange() {
@@ -184,7 +212,7 @@ class Form {
 
     Object.keys(this.validationRules).forEach((fieldName) => {
       const rule = this.validationRules[fieldName];
-      if ((rule.required && !data[fieldName]) || !rule.test(data[fieldName])) {
+      if ((rule.required && !data[fieldName]) || !rule.validate(data[fieldName])) {
         errorFields.push(fieldName);
         isValid = false;
       }
@@ -231,7 +259,7 @@ class Form {
 
   handleResponse(xhr) {
     if (xhr.readyState !== 4) return;
-    if (xhr.status !== 200) throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["b" /* default */]('request fail');
+    if (xhr.status !== 200) throw new __WEBPACK_IMPORTED_MODULE_0__utils_errors__["g" /* default */]('request fail');
     const response = JSON.parse(xhr.responseText);
     switch (response.status) {
       case __WEBPACK_IMPORTED_MODULE_1__enums__["a" /* resStatuses */].SUCCESS:
@@ -249,7 +277,8 @@ class Form {
         this.container.textContent = 'in progress';
         setTimeout(this.submit, REPEAT_TIMER);
         break;
-      default: break;
+      default:
+        break;
     }
   }
 
@@ -295,7 +324,7 @@ const resStatuses = {
  * @returns {Number}
  */
 const countWords = (text) => {
-  if (typeof text !== 'string') throw new __WEBPACK_IMPORTED_MODULE_0__errors__["b" /* default */](__WEBPACK_IMPORTED_MODULE_0__errors__["a" /* NOT_TEXT_ERROR */]);
+  if (typeof text !== 'string') throw new __WEBPACK_IMPORTED_MODULE_0__errors__["g" /* default */](__WEBPACK_IMPORTED_MODULE_0__errors__["a" /* NOT_TEXT_ERROR */]);
   const trimmedText = text.trim();
   if (!trimmedText) return 0;
   return trimmedText.split(/\s+/).length;
@@ -309,7 +338,7 @@ const countWords = (text) => {
  * @returns {number}
  */
 const countSumOfStringNumbers = (str) => {
-  if (typeof str !== 'string') throw new __WEBPACK_IMPORTED_MODULE_0__errors__["b" /* default */](__WEBPACK_IMPORTED_MODULE_0__errors__["a" /* NOT_TEXT_ERROR */]);
+  if (typeof str !== 'string') throw new __WEBPACK_IMPORTED_MODULE_0__errors__["g" /* default */](__WEBPACK_IMPORTED_MODULE_0__errors__["a" /* NOT_TEXT_ERROR */]);
   return str.split('').reduce((prev, next) => {
     const number = parseInt(next, 10);
     if (Number.isInteger(number)) {
